@@ -18,18 +18,25 @@ class HomePage extends GetWidget<HomeController> {
 
   Widget buildContent() {
     return Obx(
-        () => ListView.builder(
-        itemCount: controller.notes.length,
-          itemBuilder: (context, index) {
-          var note = controller.notes[index];
-          return Card(
-            child: Container(
-              width: double.maxFinite,
-              padding: EdgeInsets.all(15),
-              child: Text(note.text),
-            ),
+        () {
+          debugPrint("HomePage.render");
+          if (controller.filteredNotes.value.isProcessing) {
+            return Center(child: CircularProgressIndicator());
+          }
+          return ListView.builder(
+              itemCount: controller.filteredNotes.value.items.length,
+              itemBuilder: (context, index) {
+                var note = controller.filteredNotes.value.items[index];
+                return Card(
+                  child: Container(
+                    width: double.maxFinite,
+                    padding: EdgeInsets.all(15),
+                    child: Text(note.text),
+                  ),
+                );
+              }
           );
-      }),
+        }
     );
   }
 }
