@@ -1,5 +1,6 @@
 import 'package:demonotes_getx/app/service_locator.dart';
 import 'package:demonotes_getx/common/models/StateCollectionData.dart';
+import 'package:demonotes_getx/domain/models/note_model.dart';
 import 'package:demonotes_getx/domain/repositories/note_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
@@ -13,7 +14,7 @@ class HomePageBinding extends Bindings {
 }
 
 class HomeController extends GetxController {
-  var filteredNotes = StateCollectionData(items: []).obs;
+  var filteredNotes = FilterableStateCollectionData<NoteModel, NoteFilterQuery>(items: []).obs;
 
   @override
   void onInit() {
@@ -24,21 +25,29 @@ class HomeController extends GetxController {
 
   fetchNotes() {
     debugPrint("HomeController.fetchNotes...");
-    filteredNotes.value = StateCollectionData(items: [], isProcessing: true);
-    serviceLocator.noteRepository.filterAsync(NoteFilterQuery())
+    NoteFilterQuery query = NoteFilterQuery();
+    filteredNotes.value = FilterableStateCollectionData(items: [], query: query, isProcessing: true);
+    serviceLocator.noteRepository.filterAsync(query)
         .then((result) {
-      debugPrint("  found ${result.length} notes");
-      filteredNotes.value = StateCollectionData(items: result, isProcessing: false);
+      debugPrint("  found ${result.notes.length} notes");
+      filteredNotes.value = FilterableStateCollectionData(items: result.notes, isProcessing: false);
     });
   }
 
   void filter(String text) {
     debugPrint("HomeController.filter keyword=$text...");
-    filteredNotes.value = StateCollectionData(items: [], isProcessing: true);
-    serviceLocator.noteRepository.filterAsync(NoteFilterQuery(keyword: text.trim()))
+    NoteFilterQuery query = NoteFilterQuery(keyword: text.trim());
+    filteredNotes.value = FilterableStateCollectionData(items: [], query: query, isProcessing: true);
+    serviceLocator.noteRepository.filterAsync(query)
         .then((result) {
-      debugPrint("  found ${result.length} notes");
-      filteredNotes.value = StateCollectionData(items: result, isProcessing: false);
+      debugPrint("  found ${result.notes.length} notes for query=${result.query.keyword}");
+
+          if (!filteredNotes.value.query!.isEquals(query)) {
+            debugPrint(" SKIP this");
+            return;
+          }
+
+      filteredNotes.value = FilterableStateCollectionData(items: result.notes, isProcessing: false);
     });
   }
 }
