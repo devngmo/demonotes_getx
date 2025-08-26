@@ -1,5 +1,5 @@
 import 'package:demonotes_getx/app/service_locator.dart';
-import 'package:demonotes_getx/domain/models/note_model.dart';
+import 'package:demonotes_getx/common/models/StateCollectionData.dart';
 import 'package:demonotes_getx/domain/repositories/note_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
@@ -13,7 +13,7 @@ class HomePageBinding extends Bindings {
 }
 
 class HomeController extends GetxController {
-  List<NoteModel> notes = <NoteModel>[].obs;
+  var filteredNotes = StateCollectionData(items: []).obs;
 
   @override
   void onInit() {
@@ -24,21 +24,21 @@ class HomeController extends GetxController {
 
   fetchNotes() {
     debugPrint("HomeController.fetchNotes...");
-    notes.clear();
+    filteredNotes.value = StateCollectionData(items: [], isProcessing: true);
     serviceLocator.noteRepository.filterAsync(NoteFilterQuery())
         .then((result) {
       debugPrint("  found ${result.length} notes");
-      notes.assignAll(result);
+      filteredNotes.value = StateCollectionData(items: result, isProcessing: false);
     });
   }
 
   void filter(String text) {
     debugPrint("HomeController.filter...");
-    notes.clear();
-    serviceLocator.noteRepository.filterAsync(NoteFilterQuery(keyword: text.trim()))
+    filteredNotes.value = StateCollectionData(items: [], isProcessing: true);
+    serviceLocator.noteRepository.filterAsync(NoteFilterQuery())
         .then((result) {
       debugPrint("  found ${result.length} notes");
-      notes.assignAll(result);
+      filteredNotes.value = StateCollectionData(items: result, isProcessing: false);
     });
   }
 }
