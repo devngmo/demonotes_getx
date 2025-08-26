@@ -9,10 +9,26 @@ class HomePage extends GetWidget<HomeController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: SearchView(hint: "Filter notes", onTextChanged: (text) {
-        controller.filter(text);
-      })),
+      appBar: AppBar(title: Container(
+        child: SearchView(controller: controller.svController, hint: "Filter notes", onTextChanged: (text) {
+            controller.filterNotes(keyword: text);
+          }),
+        ),
+      ),
       body: SafeArea(child: buildContent()),
+      bottomNavigationBar: Obx(
+        () => BottomNavigationBar(
+          selectedItemColor: Colors.cyan,
+          currentIndex: controller.tabIndex,
+            onTap: (index) {
+              controller.selectTabAt(index);
+            },
+            items: [
+          BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Active'),
+          BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Secret'),
+          BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Archived')
+        ]),
+      ),
     );
   }
 
@@ -20,13 +36,13 @@ class HomePage extends GetWidget<HomeController> {
     return Obx(
         () {
           debugPrint("HomePage.render");
-          if (controller.filteredNotes.value.isProcessing) {
+          if (controller.isActiveTabLoading) {
             return Center(child: CircularProgressIndicator());
           }
           return ListView.builder(
-              itemCount: controller.filteredNotes.value.items.length,
+              itemCount: controller.filteredNotes.length,
               itemBuilder: (context, index) {
-                var note = controller.filteredNotes.value.items[index];
+                var note = controller.filteredNotes[index];
                 return Card(
                   child: Container(
                     width: double.maxFinite,
