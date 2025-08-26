@@ -9,7 +9,10 @@ class HomePage extends GetWidget<HomeController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Container(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.white,
+        title: Container(
         child: SearchView(controller: controller.svController, hint: "Filter notes", onTextChanged: (text) {
             controller.filterNotes(keyword: text);
           }),
@@ -44,6 +47,7 @@ class HomePage extends GetWidget<HomeController> {
               itemBuilder: (context, index) {
                 var note = controller.filteredNotes[index];
                 return Card(
+                  elevation: 0,
                   child: Container(
                     width: double.maxFinite,
                     padding: EdgeInsets.all(15),
