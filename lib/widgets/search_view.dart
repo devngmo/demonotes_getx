@@ -15,7 +15,7 @@ class SearchView extends StatefulWidget {
   final Function(String text) onTextChanged;
   final String hint;
   final SearchViewController controller;
-  const SearchView({super.key, required this.controller, required this.onTextChanged, this.hint = ""});
+  const SearchView({super.key, required this.controller, required this.onTextChanged, this.hint = "Keyword"});
 
   @override
   State<SearchView> createState() => _SearchViewState();
@@ -36,8 +36,12 @@ class _SearchViewState extends State<SearchView> {
     debugPrint("SearchView.build text=${tec.text}");
     return TextFormField(
       controller: tec,
+      textAlign: TextAlign.center,
       decoration: InputDecoration(
-        hintText: widget.hint
+        hintText: widget.hint,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(40))
+        )
       ),
       onChanged: (value) {
         widget.onTextChanged(value);
