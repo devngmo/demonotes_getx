@@ -33,9 +33,9 @@ class HomeController extends GetxController {
   }
 
   void filter(String text) {
-    debugPrint("HomeController.filter...");
+    debugPrint("HomeController.filter keyword=$text...");
     filteredNotes.value = StateCollectionData(items: [], isProcessing: true);
-    serviceLocator.noteRepository.filterAsync(NoteFilterQuery())
+    serviceLocator.noteRepository.filterAsync(NoteFilterQuery(keyword: text.trim()))
         .then((result) {
       debugPrint("  found ${result.length} notes");
       filteredNotes.value = StateCollectionData(items: result, isProcessing: false);
