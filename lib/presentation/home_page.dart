@@ -21,7 +21,7 @@ class HomePage extends GetWidget<HomeController> {
       body: SafeArea(child: buildContent()),
       bottomNavigationBar: Obx(
         () => BottomNavigationBar(
-          selectedItemColor: Colors.cyan,
+          selectedItemColor: controller.tabIndex == 1?Colors.red: Colors.cyan,
           currentIndex: controller.tabIndex,
             onTap: (index) {
               controller.selectTabAt(index);
