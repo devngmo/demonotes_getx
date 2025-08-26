@@ -14,17 +14,19 @@ class HomePage extends GetWidget<HomeController> {
   }
 
   Widget buildContent() {
-    return ListView.builder(
-      itemCount: controller.notes.length,
-        itemBuilder: (context, index) {
-        var note = controller.notes[index];
-        return Card(
-          child: Container(
-            width: double.maxFinite,
-            padding: EdgeInsets.all(15),
-            child: Text(note.text),
-          ),
-        );
-    });
+    return Obx(
+        () => ListView.builder(
+        itemCount: controller.notes.length,
+          itemBuilder: (context, index) {
+          var note = controller.notes[index];
+          return Card(
+            child: Container(
+              width: double.maxFinite,
+              padding: EdgeInsets.all(15),
+              child: Text(note.text),
+            ),
+          );
+      }),
+    );
   }
 }
