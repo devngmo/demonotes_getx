@@ -31,4 +31,14 @@ class HomeController extends GetxController {
       notes.assignAll(result);
     });
   }
+
+  void filter(String text) {
+    debugPrint("HomeController.filter...");
+    notes.clear();
+    serviceLocator.noteRepository.filterAsync(NoteFilterQuery(keyword: text.trim()))
+        .then((result) {
+      debugPrint("  found ${result.length} notes");
+      notes.assignAll(result);
+    });
+  }
 }
