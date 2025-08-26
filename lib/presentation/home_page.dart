@@ -1,4 +1,5 @@
 import 'package:demonotes_getx/controllers/home_controller.dart';
+import 'package:demonotes_getx/widgets/search_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -8,7 +9,9 @@ class HomePage extends GetWidget<HomeController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Demo Notes")),
+      appBar: AppBar(title: SearchView(hint: "Filter notes", onTextChanged: (text) {
+        controller.filter(text);
+      })),
       body: SafeArea(child: buildContent()),
     );
   }
