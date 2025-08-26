@@ -14,7 +14,7 @@ class MockNoteRepository extends NoteRepository {
       if (query.keyword != null) noteText += query.keyword!;
       result.add(NoteModel(id: 'note-$i', text: noteText));
     }
-    Future.delayed(Duration(seconds: 3));
+    await Future.delayed(Duration(seconds: 1));
     return result;
   }
 }
