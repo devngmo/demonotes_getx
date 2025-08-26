@@ -6,7 +6,7 @@ import 'package:demonotes_getx/domain/repositories/note_repository.dart';
 class MockNoteRepository extends NoteRepository {
   Random rnd = Random();
   @override
-  Future<List<NoteModel>> filterAsync(NoteFilterQuery query) async {
+  Future<NoteFilterPageResult> filterAsync(NoteFilterQuery query) async {
     List<NoteModel> result = [];
     int n = rnd.nextInt(100);
     for(int i = 0; i < n; i++) {
@@ -15,6 +15,6 @@ class MockNoteRepository extends NoteRepository {
       result.add(NoteModel(id: 'note-$i', text: noteText));
     }
     await Future.delayed(Duration(seconds: 1));
-    return result;
+    return NoteFilterPageResult(query: query, notes: result);
   }
 }
